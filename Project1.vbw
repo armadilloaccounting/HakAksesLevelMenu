@@ -1,0 +1,10 @@
+frmOperator = 22, 29, 646, 461, , 22, 29, 767, 461, C
+frmAddEditOperator = 66, 87, 690, 519, C, 132, 174, 877, 606, C
+frmLogin = 154, 203, 871, 635, , 22, 29, 739, 461, C
+frmMain = 154, 203, 778, 635, C, 22, 29, 739, 461, C
+modDatabase = 66, 87, 783, 519, C
+modMain = 44, 58, 761, 490, Z
+modPublic = 132, 174, 849, 606, C
+clsOperator = 154, 203, 871, 635, C
+modConst = 0, 0, 717, 432, C
+frmHakAkses = 88, 116, 712, 548, , 0, 0, 624, 432, C
