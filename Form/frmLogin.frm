@@ -71,6 +71,26 @@ Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
 Option Explicit
 
+Private Function isMenuInduk(ByVal menuName As String) As Boolean
+    Dim rowCount As Integer
+    
+    strSql = "SELECT COUNT(*) FROM menu_induk WHERE menu_name = '" & menuName & "'"
+    rowCount = dbGetValue(strSql, 0)
+    
+    isMenuInduk = rowCount > 0
+End Function
+
+Private Function isVisibleMenuInduk(ByVal menuName As String, ByVal hakAkses As String) As Boolean
+    Dim rowCount As Integer
+    
+    strSql = "SELECT COUNT(*) " & _
+             "FROM menu_induk INNER JOIN menu_anak ON menu_induk.id = menu_anak.menu_induk_ID " & _
+             "WHERE menu_induk.menu_name = '" & menuName & "' and menu_anak.id IN (" & hakAkses & ")"
+    
+    rowCount = dbGetValue(strSql, 0)
+    isVisibleMenuInduk = Not (rowCount = 0)
+End Function
+
 Private Sub disableMenu(ByVal fMain As Form, ByVal hakAkses As String)
     Dim ctl     As Control
     Dim rsMenu  As ADODB.Recordset
@@ -83,12 +103,22 @@ Private Sub disableMenu(ByVal fMain As Form, ByVal hakAkses As String)
     If Not rsMenu.EOF Then
         Do While Not rsMenu.EOF
             For Each ctl In fMain.Controls
-                If TypeName(ctl) = "Menu" Then
-                    If ctl.Name = rsMenu("menu_name").Value Then
-                        ctl.Enabled = False
-                        Exit For
+            
+                If isMenuInduk(ctl.Name) Then
+                    If ctl.Enabled Then
+                        ctl.Visible = isVisibleMenuInduk(ctl.Name, hakAkses)
                     End If
                 End If
+                
+                If ctl.Visible Then
+                    If TypeName(ctl) = "Menu" Then
+                        If ctl.Name = rsMenu("menu_name").Value Then
+                            ctl.Enabled = False
+                            Exit For
+                        End If
+                    End If
+                End If
+                
             Next
             
             rsMenu.MoveNext
